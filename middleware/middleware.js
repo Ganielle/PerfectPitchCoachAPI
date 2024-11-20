@@ -1,5 +1,5 @@
 //  Import here your User schema for checking of accounts
-// const Users = require("../models/Users")
+const Users = require("../models/Users")
 // const Staffusers = require("../models/Staffusers")
 
 const fs = require('fs');
@@ -14,6 +14,41 @@ const verifyJWT = async (token) => {
     } catch (error) {
         console.error('Invalid token:', error.message);
         throw new Error('Invalid token');
+    }
+};
+
+exports.protectplayer = async (req, res, next) => {
+    const token = req.headers.authorization;
+
+    if (!token) {
+        return res.json({ message: 'Unauthorized' });
+    }
+
+    try {
+        if (!token.startsWith("Bearer")) {
+            return res.json({ message: 'Unauthorized' });
+        }
+        const headerpart = token.split(' ')[1];
+
+        const decodedToken = await verifyJWT(headerpart);
+
+        const user = await Users.findOne({ username: decodedToken.username });
+        
+        if (!user) {
+            res.clearCookie('sessionToken', { path: '/' });
+            return res.json({ message: 'Unauthorized' });
+        }
+
+        if (decodedToken.token != user.gametoken) {
+            res.clearCookie('sessionToken', { path: '/' });
+            return res.json({ message: 'duallogin', data: `Your account had been opened on another device! You will now be logged out.` });
+        }
+
+        req.user = decodedToken;
+        next();
+    } catch (ex) {
+        console.log(`Error in protectplayer middleware: ${ex.message}`);
+        return res.json({ message: 'Unauthorized' });
     }
 };
 
