@@ -7,6 +7,9 @@ const ScoreSchema = new mongoose.Schema(
             ref: "Users",
             index: true // Automatically creates an index on 'amount'
         },
+        song: {
+            type: String
+        },
         amount: {
             type: Number
         }
