@@ -15,7 +15,7 @@ exports.getrecommendation = async (req, res) => {
         messages: [
             {
                 role: "user",
-                content: `my score from the app that test my singing skills is ${score} / ${maxscore}, the song is ${songname}, give me a recommendation on how to improve my skills and make it brief`,
+                content: `my score from the app that test my singing skills is ${score} / ${maxscore}, the song is ${songname}, give me a recommendation on how to improve my skills and make it brief. Also don't recomment me to use another app and go to coach since I'm creating an app for this I just want you to create a recommendation.`,
             },
         ],
     });
