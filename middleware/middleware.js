@@ -39,10 +39,10 @@ exports.protectplayer = async (req, res, next) => {
             return res.json({ message: 'Unauthorized' });
         }
 
-        if (decodedToken.token != user.token) {
-            res.clearCookie('sessionToken', { path: '/' });
-            return res.json({ message: 'duallogin', data: `Your account had been opened on another device! You will now be logged out.` });
-        }
+        // if (decodedToken.token != user.token) {
+        //     res.clearCookie('sessionToken', { path: '/' });
+        //     return res.json({ message: 'duallogin', data: `Your account had been opened on another device! You will now be logged out.` });
+        // }
 
         req.user = decodedToken;
         next();

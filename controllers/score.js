@@ -19,9 +19,13 @@ exports.getscore = async (req, res) => {
 
     const {song} = req.query
 
+    if (!song){
+        return res.status(400).json({message: "failed", data: "Select a valid song!"})
+    }
+
     const result = await Scores.find({owner: new mongoose.Types.ObjectId(id), song: song})
-    .sort({ createdAt: -1 })
+    .sort({ amount: -1 })
     .limit(1) 
 
-    return res.json({message: "succes", data: result})
+    return res.json({message: "success", data: result.length <= 0 ? 0 : result[0].amount})
 }
