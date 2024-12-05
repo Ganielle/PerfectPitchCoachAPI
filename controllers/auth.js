@@ -48,6 +48,9 @@ exports.authlogin = async(req, res) => {
             })
             .catch(err => res.status(400).json({ message: "bad-request2", data: "There's a problem with your account! There's a problem with your account! Please contact customer support for more details."  + err }))
         }
+        else{
+            return res.status(400).json({message: "failed", data: "No user found! Please enter correct credentials"})
+        }
     })
     .catch(err => res.status(400).json({ message: "bad-request1", data: "There's a problem with your account! There's a problem with your account! Please contact customer support for more details." }))
 }
