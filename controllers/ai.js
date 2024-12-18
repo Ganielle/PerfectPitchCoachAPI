@@ -25,3 +25,24 @@ exports.getrecommendation = async (req, res) => {
         }
     })
 }
+
+exports.preassessment = async (req, res) => {
+    const {id, username} = req.user
+
+    const {question, songname} = req.query
+
+    const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+            {
+                role: "user",
+                content: `This is the user question: ${question}"`,
+            },
+        ],
+    });
+    
+    return res.json({message: "success", data: {
+        content: completion.choices[0].message.content
+        }
+    })
+}

@@ -1,5 +1,6 @@
 const { default: mongoose } = require("mongoose")
 const Scores = require("../models/Score")
+const Unlock = require("../models/Unlock")
 
 exports.savescore = async (req, res) => {
     const {id, username} = req.user
@@ -10,6 +11,28 @@ exports.savescore = async (req, res) => {
     .catch(err => {
         console.log(`There's a problem saving the score for ${username}. Error: ${err}`)
     })
+
+    let songtounlock = "";
+
+    switch (song){
+        case "Scales and Triads":
+            songtounlock = "Arpeggio"
+        break;
+        case "Arpeggio":
+            songtounlock = "Circular 5th Major"
+        break;
+        case "Circular 5th Major":
+            songtounlock = "Circular 9th Major"
+        break;
+        case "Circular 9th Major":
+            songtounlock = "Looper 1"
+        break;
+        case "Looper 1":
+            songtounlock = "Looper 2"
+        break;
+    }
+
+    await Unlock.findOneAndUpdate({owner: new mongoose.Types.ObjectId(id), song: songtounlock}, {locked: 0})
 
     return res.json({message: "success"})
 }
@@ -74,4 +97,15 @@ exports.getleaderboard = async (req, res) => {
     ]);
 
     return res.json({ message: "success", data: result });
+}
+
+exports.getscorehistory = async (req, res) => {
+    const {id, username} = req.user
+
+    const scorehistorydata = await Scores.find({owner: new mongoose.Types.ObjectId(id)})
+    .sort({createdAt: -1})
+    .limit(10)
+    .then(data => data)
+
+    return res.json({message: "success", data: scorehistorydata})
 }
