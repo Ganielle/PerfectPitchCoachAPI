@@ -14,7 +14,7 @@ var storage = multer.diskStorage({
 var recordingupload = multer({
     storage: storage,
     fileFilter: function(req, file, callback){
-        if (file.mimetype == "audio/wav" || file.mimetype == "audio/wave" || file.mimetype == "audio/mp3" || file.mimetype == "video/mp4" || file.mimetype == "audio/mpeg"){
+        if (file.mimetype == "audio/wav" || file.mimetype == "audio/wave"){
             callback(null, true);
         }else{
             console.log(file.mimetype)

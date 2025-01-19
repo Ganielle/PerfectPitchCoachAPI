@@ -13,8 +13,16 @@ const SongSchema = new mongoose.Schema(
         songfile: {
             type: String
         },
+        speed: {
+            type: Number
+        },
         notes: [{
             notevalue: {
+                type: String
+            }
+        }],
+        noteletter: [{
+            notelettervalue: {
                 type: String
             }
         }]

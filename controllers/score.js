@@ -103,7 +103,6 @@ exports.getscorehistory = async (req, res) => {
     const {id, username} = req.user
 
     const scorehistorydata = await Scores.find({owner: new mongoose.Types.ObjectId(id)})
-    .sort({createdAt: -1})
     .limit(10)
     .then(data => data)
 
