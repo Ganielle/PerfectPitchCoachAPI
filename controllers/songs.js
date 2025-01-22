@@ -6,6 +6,9 @@ exports.uploadsong = async (req, res) => {
     const {id} = req.user
     const {songname, notes, noteletter, speed} = req.body
 
+    console.log(`spawn time: ${notes}`)
+    console.log(`letters: ${noteletter}`);
+
     let songfile = ""
 
     console.log(notes)
