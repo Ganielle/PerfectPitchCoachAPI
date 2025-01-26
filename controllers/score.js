@@ -101,8 +101,13 @@ exports.getleaderboard = async (req, res) => {
 
 exports.getscorehistory = async (req, res) => {
     const {id, username} = req.user
+    const {songname} = req.query
 
-    const scorehistorydata = await Scores.find({owner: new mongoose.Types.ObjectId(id)})
+    if (!songname){
+        return res.status(400).json({message: "failed", data: "Please select a valid song first!"})
+    }
+
+    const scorehistorydata = await Scores.find({owner: new mongoose.Types.ObjectId(id), song: songname})
     .limit(10)
     .then(data => data)
 

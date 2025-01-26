@@ -96,7 +96,7 @@ exports.getuploadedscore = async (req, res) => {
 
     const {songid} = req.query
 
-    await Uploadscore.find({owner: new mongoose.Types.ObjectId(id), songid: new mongoose.Types.ObjectId(songid)})
+    const result = await Uploadscore.find({owner: new mongoose.Types.ObjectId(id), songid: new mongoose.Types.ObjectId(songid)})
     .sort({ amount: -1 })
     .limit(1) 
 
