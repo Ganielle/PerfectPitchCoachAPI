@@ -6,12 +6,7 @@ exports.uploadsong = async (req, res) => {
     const {id} = req.user
     const {songname, notes, noteletter, speed} = req.body
 
-    console.log(`spawn time: ${notes}`)
-    console.log(`letters: ${noteletter}`);
-
     let songfile = ""
-
-    console.log(notes)
 
     if (!songname){
         return res.status(400).json({ message: "failed", 
@@ -41,7 +36,7 @@ exports.uploadsong = async (req, res) => {
             data: "Select your song you want to upload and try again" })
     }
 
-    const formattedNotes = notes.map((note) => ({ notevalue: note }));
+    const formattedNotes = notes.map((note) => ({ notevalue: parseFloat(note) }));
     const formattedNoteLetters = noteletter.map((note) => ({ notelettervalue: note }));
 
     await Songs.create({owner: new mongoose.Types.ObjectId(id), songname: songname, songfile: songfile, notes: formattedNotes, noteletter: formattedNoteLetters, speed: speed})
