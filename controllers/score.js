@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose")
 const Scores = require("../models/Score")
 const Unlock = require("../models/Unlock")
+const Finalassessment = require("../models/Finalassessment")
 
 exports.savescore = async (req, res) => {
     const {id, username} = req.user
@@ -12,27 +13,70 @@ exports.savescore = async (req, res) => {
         console.log(`There's a problem saving the score for ${username}. Error: ${err}`)
     })
 
+    let canunlock = false;
+    let tempscore = 0;
+
     let songtounlock = "";
 
     switch (song){
         case "Scales and Triads":
+
+            tempscore = 150 * 0.5;
+
+            if (score >= tempscore)
+                canunlock = true;
+
             songtounlock = "Arpeggio"
         break;
         case "Arpeggio":
+            
+            tempscore = 150 * 0.5;
+
+            if (score >= tempscore)
+                canunlock = true;
+
             songtounlock = "Circular 5th Major"
         break;
         case "Circular 5th Major":
+            
+            tempscore = 150 * 0.5;
+
+            if (score >= tempscore)
+                canunlock = true;
+
             songtounlock = "Circular 9th Major"
         break;
         case "Circular 9th Major":
+            
+            tempscore = 150 * 0.5;
+
+            if (score >= tempscore)
+                canunlock = true;
+
             songtounlock = "Looper 1"
         break;
         case "Looper 1":
+            
+            tempscore = 150 * 0.5;
+
+            if (score >= tempscore)
+                canunlock = true;
+
             songtounlock = "Looper 2"
+        break;
+        case "Looper 2":
+
+            tempscore = 150 * 0.75;
+
+            if (score >= tempscore){
+                await Finalassessment.findOneAndUpdate({owner: new mongoose.Types.ObjectId(id), unlock: 0}, {unlock: 1})
+            }
+
         break;
     }
 
-    await Unlock.findOneAndUpdate({owner: new mongoose.Types.ObjectId(id), song: songtounlock}, {locked: 0})
+    if (canunlock == true)
+        await Unlock.findOneAndUpdate({owner: new mongoose.Types.ObjectId(id), song: songtounlock}, {locked: 0})
 
     return res.json({message: "success"})
 }

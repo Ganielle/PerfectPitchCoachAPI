@@ -13,6 +13,7 @@ exports.getrecommendation = async (req, res) => {
     const {score, maxscore, songname} = req.query
 
     const myscore = await Scores.find({owner: new mongoose.Types.ObjectId(id), song: songname})
+    .limit(10)
     .then(data => data)
     .catch(err => {
         console.log(`There's a problem getting the score of the user! Error: ${err}`)
@@ -65,6 +66,41 @@ exports.preassessment = async (req, res) => {
             {
                 role: "user",
                 content: `This is the user question: ${question}"`,
+            },
+        ],
+    });
+    
+    return res.json({message: "success", data: {
+        content: completion.choices[0].message.content
+        }
+    })
+}
+
+exports.getfinalassessment = async(req, res) => {
+
+    const topScores = await ScoreSchema.aggregate([
+        {
+            $sort: { amount: -1 } // Sort by highest score first
+        },
+        {
+            $group: {
+                _id: "$song", // Group by song type
+                highestScore: { $first: "$$ROOT" } // Pick the first (highest) document per group
+            }
+        },
+        {
+            $replaceRoot: { newRoot: "$highestScore" } // Flatten the result structure
+        }
+    ]);
+
+    const content = `Please give me a final assessment on all of my sessions combined, this is my scores per session:\n\n ${topScores}`
+
+    const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+            {
+                role: "user",
+                content: content,
             },
         ],
     });

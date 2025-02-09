@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose")
 const Users = require("../models/Users")
 const Unlock = require("../models/Unlock")
+const Finalassessment = require("../models/Finalassessment")
 
 exports.createuser = async (req, res) => {
     const {username, password} = req.body
@@ -76,6 +77,8 @@ exports.createuser = async (req, res) => {
         return res.status(400).json({message: "failed", data: "There's a problem creating user account. Please contact customer support for more details"})
     })
 
+    await Finalassessment.create({owner: new mongoose.Types.ObjectId(userdata._id), unlock: 0})
+
     return res.json({message: "success"})
 }
 
@@ -103,4 +106,12 @@ exports.getsongs = async (req, res) => {
     })
 
     return res.json({message: "success", data: data})
+}
+
+exports.getfinalassessmentstats = async (req, res) => {
+    const {id} = req.user
+
+    const assessment = await Finalassessment.findOne({owner: new mongoose.Types.ObjectId(id)})
+
+    return res.json({message: "success", data: assessment.unlock})
 }
