@@ -78,7 +78,7 @@ exports.preassessment = async (req, res) => {
 
 exports.getfinalassessment = async(req, res) => {
 
-    const topScores = await ScoreSchema.aggregate([
+    const topScores = await Scores.aggregate([
         {
             $sort: { amount: -1 } // Sort by highest score first
         },
