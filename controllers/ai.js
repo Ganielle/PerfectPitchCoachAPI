@@ -93,8 +93,8 @@ exports.getfinalassessment = async(req, res) => {
         }
     ]);
 
-    const content = `Please give me a final assessment on all of my sessions combined, this is my scores per session:\n\n ${JSON.stringify(topScores)}`
-
+    const content = `Please give me a final assessment on all of my sessions combined, this is my scores per session:\n\n ${JSON.stringify(topScores)}.`
+    console.log(content)
     const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         messages: [
@@ -105,8 +105,6 @@ exports.getfinalassessment = async(req, res) => {
         ],
     });
     
-    return res.json({message: "success", data: {
-        content: completion.choices[0].message.content
-        }
+    return res.json({message: "success", data: completion.choices[0].message.content
     })
 }
